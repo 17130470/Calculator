@@ -97,3 +97,108 @@ public class CalcAuthorization implements ActionListener{
         /* Добавляем метку на панель */
         container.add(label);
     }
+
+    /* Метод добавления текстовых полей */
+    public JTextField addTextField(JComponent container){
+        /* Создаем объект текстового поля */
+        JTextField field = new JTextField();
+        /* Устанавливаем максимально допустимый размер поля */
+        field.setMaximumSize(new Dimension(350,20));
+        /* Добавляем поле на панель */
+        container.add(field);
+        /* Возвращаем ссылку на текстовое поле */
+        return field;
+    }
+
+    /* Метод добавления кнопок */
+    public JButton addButton(JComponent container, String name){
+        /* Создаем объект кнопки */
+        JButton button = new JButton(name);
+        /* Устанавливаем максимально допустимый размер кнопки */
+        button.setMaximumSize(new Dimension(100,20));
+        /* Устанавливаем выравнивание по горизонтали (по центру) */
+        button.setHorizontalAlignment(JButton.CENTER);
+        /* Добавляем кнопку на панель */
+        container.add(button);
+        /* Возвращаем ссылку на кнопку */
+        return button;
+    }
+    
+    /* Метод прохождения авторизации */
+    public void signIn() throws Exception {
+		/* Записываем введенный текст из поля ввода логина в переменную */
+    	String login = fieldsAut[0].getText();
+		/* Записываем введенный текст из поля ввода пароля в переменную */
+    	String password = fieldsAut[1].getText();
+		/* Создаем массив, который содержит допустимые значения логина */
+    	String[] loginArray = {"Ard", "Bay", "Shay", "Step"};
+		/* Создаем массив, который содержит допустимые значения пароля */
+    	String[] passwordArray = {"17130470", "17130175", "17130180", "17130705"};
+    	
+		/* Выполняем проверку введенных логина и пароля через цикл for.
+		Если введенные значения совпадают со значениями в массивах,
+		проверка пройдена успешно и авторизация выполнена. 
+		*/
+    	for (int i = 0; i < loginArray.length; i++) {
+    		if ((login.equals(loginArray[i])) && (password.equals(passwordArray[i]))) {
+				/* Создаем объект главного класса Calculator */
+        		Calculator calc = new Calculator();
+				/* Изменяем значение переменной id в главном классе */
+        		calc.setStateId(true);
+				/* Выводим сообщение об успешном прохождении процесса авторизации */
+        		JOptionPane.showMessageDialog(null, "Авторизация пройдена успешно");
+				/* Скрываем окно авторизации */
+        		frameAut.setVisible(false);
+        	}
+    	}
+    }
+    
+    /* С помощью аннотации @Override указываем, что
+	метод, следующий за аннотацией, будет переопределен.
+	*/	
+    @Override
+	/* Метод обработки события нажатия на кнопку */
+    public void actionPerformed(ActionEvent e) {
+        /* С помощью оператора if выполняем действие,
+		назначенное на ту кнопку, чье имя совпадаем со
+		строкой, которая передается в качестве параметра
+		встроенному методу equals.
+		*/
+        if (e.getActionCommand().equals("Авторизоваться")) {
+			/* Обработка исключения на случай возникновения ошибок 
+			в процессе выполнения кода, записанного в боке try. 
+			*/
+            try {
+                /* Запускаем метод авторизации */
+            	signIn();
+			/* Код, выполняемый при возникновении ошибок 
+			в процессе выполнения кода из блока try. 
+			*/
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Проверьте правильность ввода");
+            }
+        } else if (e.getActionCommand().equals("Сброс")) {
+            /* Очищаем все поля через цикл */
+            for(int i=0; i<fieldsAut.length; i++){
+                fieldsAut[i].setText("");
+            }
+        }
+    }
+    
+    /* Главный метод класса, запускающий процесс авторизации */
+    public void runAut() {
+		/* С помощью метода invokeLater запускаем асинхронную операцию,
+		которая сохраняет действие (Runnable), и запускает его на одной
+		из следующих итераций цикла сообщений.
+		*/
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+			/* Создаем метод, который запускает процесс авторизации
+			через конструктор класса.
+			*/
+            public void run() {
+                new CalcAuthorization();
+            }
+        });
+    }
+}
